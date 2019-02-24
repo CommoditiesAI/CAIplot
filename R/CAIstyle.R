@@ -1,8 +1,12 @@
-# Style for CAI graphics
+#' Style for CAI graphics.
+#'
+#' Add to the bottom of GGPlots
+#' @export
+
 CAIstyle <- function () {
     font <- "Gill Sans MT"
     ggplot2::theme(plot.title = ggplot2::element_text(family = font,
-        				size = 28, face = "bold", color = "#222222"), 
+        				size = 28, face = "bold", color = "#222222"),
 						plot.subtitle = ggplot2::element_text(family = font,
         				size = 22, margin = ggplot2::margin(9, 0, 9, 0)), plot.caption = ggplot2::element_blank(),
             legend.position = "top", legend.text.align = 0, legend.background = ggplot2::element_blank(),

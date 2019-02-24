@@ -1,11 +1,30 @@
-# Function for finalising a graphic - resize, add logo and source, then save
-# Reworked BBCplot function
+#' Arrange alignment and save CAI ggplot chart.
+#'
+#' Function for finalising a graphic - resize, add logo and source, then save.
+#'
+#' Running this function will save your plot with the correct guidelines for publication for a CAI graphic.
+#' It will left align your title, subtitle and source, add the CAI logo at the bottom right and save it to your specified location.
+#' @param plot_name The variable name of the plot you have created that you want to format and save
+#' @param source The text you want to come after the text 'Source:' in the bottom left hand side of your side
+#' @param filename Exact name of file that you want to save to
+#' @param filepath Exact path to the directory you want to save to
+#' @param size Specify the size - "Full", "Half", "Long", or "Manual", which references height and width
+#' @param width Width in pixels that you want to save your chart to - defaults to 640
+#' @param height Height in pixels that you want to save your chart to - defaults to 450
+#' @param logo_image_path File path for the logo image you want to use in the right hand side of your chart,
+#'  which needs to be a PNG file - defaults to CAI blocks image that sits within the data folder of your package
+#' @return (Invisibly) an updated ggplot object.
+#' @source BBCplot (function) reworked.
+#' @keywords finalise_plot
+#' @export
+#' @import dplyr ggplot2 ggpubr jpeg png rsvg stringr
+
 
 CAIfinalise <- function(plot_name = last_plot(),
                           source = "CA&I  \xA9",
                           filename = "unnamed_plot.png",
                           filepath = getwd(),
-                          size = NA,
+                          size = "full",
                           width = 640,
                           height = 450,
                           logo_image_path) {
@@ -16,6 +35,7 @@ CAIfinalise <- function(plot_name = last_plot(),
     save_file <- paste0(filepath, "/", filename)   # Create the file name for saving
 
   # Case of size, to give width and height
+    size <- stringr::str_to_lower(size)
     height <- dplyr::case_when(
       size == "full" ~ 450, # Full page graphic
       size == "half" ~ 450, # Half page graphic, e.g. Powerpoint
@@ -31,14 +51,14 @@ CAIfinalise <- function(plot_name = last_plot(),
       TRUE ~ 650)
 
 # Ensure plot is present, otherwise uses last_plot()
-#   plot_name <- ifelse(exists(plot_name), plot_name, last_plot()) # Get the object referenced
+   plot_name <- ifelse(missing(plot_name), ggplot2::last_plot(), plot_name)
 
 # if logo is specificed, use, otherwise use standard
     link <- ifelse(missing(logo_image_path), "http://commoditiesanalysis.co.uk/wp-content/uploads/2018/07/cropped-CAI-logo-4.png", logo_image_path)
 
 # Check if file exists, if not, download it from the website
     if(file.exists(basename(link)) == FALSE) {
-      download.file(link, destfile =  basename(link), mode = 'wb')
+      utils::download.file(link, destfile =  basename(link), mode = 'wb')
   }
 
 # Convert files to PNG
@@ -97,30 +117,3 @@ create_footer <- function (source = "CA&I", logo_image_path = "../graphics/cropp
                                grid::rasterGrob(png::readPNG(logo_image_path), x = 0.954))
 return(footer)
 }
-
-#' Arrange alignment and save CAI ggplot chart
-#'
-#' Running this function will save your plot with the correct guidelines for publication for a CAI graphic.
-#' It will left align your title, subtitle and source, add the CAI blocks at the bottom right and save it to your specified location.
-#' @param plot_name The variable name of the plot you have created that you want to format and save
-#' @param source The text you want to come after the text 'Source:' in the bottom left hand side of your side
-#' @param filename Exact name of file that you want to save to
-#' @param filepath Exact path to the directory you want to save to
-#' @param width Width in pixels that you want to save your chart to - defaults to 640
-#' @param height Height in pixels that you want to save your chart to - defaults to 450
-#' @param logo_image_path File path for the logo image you want to use in the right hand side of your chart,
-#'  which needs to be a PNG file - defaults to CAI blocks image that sits within the data folder of your package
-#' @return (Invisibly) an updated ggplot object.
-
-#' @keywords finalise_plot
-#' @examples
-#' finalise_plot(plot_name = myplot,
-#' source = "The source for my data",
-#' save_file = "filename_that_my_plot_should_be_saved_to-nc.png",
-#' size = "Select: Full, half, long or manual",
-#' width = 640,
-#' height = 450,
-#' logo_image_path = "logo_image_filepath.png"
-#' )
-#'
-#' @export
