@@ -1,7 +1,7 @@
 # Function for finalising a graphic - resize, add logo and source, then save
 # Reworked BBCplot function
 
-  CAIfinalise <- function(plot_name = last_plot(),
+CAIfinalise <- function(plot_name = last_plot(),
                           source = "CA&I  \xA9",
                           filename = "unnamed_plot.png",
                           filepath = getwd(),
@@ -30,18 +30,18 @@
       size == "manual" ~ width,
       TRUE ~ 650)
 
-  # Ensure plot is present, otherwise uses last_plot()
-  #   plot_name <- ifelse(exists(plot_name), plot_name, last_plot()) # Get the object referenced
+# Ensure plot is present, otherwise uses last_plot()
+#   plot_name <- ifelse(exists(plot_name), plot_name, last_plot()) # Get the object referenced
 
-  # if logo is specificed, use, otherwise use standard
+# if logo is specificed, use, otherwise use standard
     link <- ifelse(missing(logo_image_path), "http://commoditiesanalysis.co.uk/wp-content/uploads/2018/07/cropped-CAI-logo-4.png", logo_image_path)
 
-  # Check if file exists, if not, download it from the website
+# Check if file exists, if not, download it from the website
     if(file.exists(basename(link)) == FALSE) {
       download.file(link, destfile =  basename(link), mode = 'wb')
   }
 
-  # Convert files to PNG
+# Convert files to PNG
     # If file is .svg
       if(tools::file_ext(link) == "svg") {
         old.link <- link
@@ -49,7 +49,7 @@
         rsvg::rsvg_png(basename(old.link), link)
       }
 
-    # If file is .jpg
+# If file is .jpg
       if(tools::file_ext(link) == "jpg") {
         old.link <- link
         link <- paste0(strsplit(basename(link), "\\.")[[1]][1], ".png") # Renames link to the PNG file
@@ -57,46 +57,45 @@
         png::writePNG(img, link)
       }
 
-  logo <- png::readPNG(basename(link))
+logo <- png::readPNG(basename(link))
+footer <- create_footer(source = source, logo_image_path = paste0(getwd(), "/", basename(link)))
 
-  footer <- create_footer(source = source, logo_image_path = paste0(getwd(), "/", basename(link)))
-
-  # Draw left-aligned grid
-    plot_left_aligned <- left_align(plot_name, c("subtitle", "title", "caption"))
-    plot_grid <- ggpubr::ggarrange(plot_left_aligned, footer,
+# Draw left-aligned grid
+plot_left_aligned <- left_align(plot_name, c("subtitle", "title", "caption"))
+plot_grid <- ggpubr::ggarrange(plot_left_aligned, footer,
                                  ncol = 1, nrow = 2,
                                  heights = c(1, 0.065/(height/450))) # Changes the size of logo
 
-    print(paste("Saving to", save_file))
-    save_plot(plot_grid, width, height, save_file)
+print(paste("Saving to", save_file))
+save_plot(plot_grid, width, height, save_file)
 
-  ## Return (invisibly) a copy of the graph. Can be assigned to a variable or ignored
-    invisible(plot_grid)
+## Return (invisibly) a copy of the graph. Can be assigned to a variable or ignored
+invisible(plot_grid)
 }
 
-  # Save the plot as a grid
-    save_plot <- function(plot_grid, width, height, save_file) {
+# Save the plot as a grid
+save_plot <- function(plot_grid, width, height, save_file) {
       grid::grid.draw(plot_grid)
       ggplot2::ggsave(filename = save_file, device = "png",
                   plot=plot_grid, width=(width/72), height=(height/72),  bg="white")
   }
 
-  # Left align text
-    left_align <- function(plot_name, pieces){
+# Left align text
+left_align <- function(plot_name, pieces){
       grob <- ggplot2::ggplotGrob(plot_name)
       n <- length(pieces)
       grob$layout$l[grob$layout$name %in% pieces] <- 2
       return(grob)
   }
 
-  # Make the footer
-    create_footer <- function (source = "CA&I", logo_image_path = "../graphics/cropped-CAI-logo-4.png") {
+# Make the footer
+create_footer <- function (source = "CA&I", logo_image_path = "../graphics/cropped-CAI-logo-4.png") {
       footer_text <- paste0("Source: ", source)  # Superscript? text parse(text='70^o*N')
       footer <- grid::grobTree(grid::linesGrob(x = grid::unit(c(0, 1), "npc"), y = grid::unit(1.2, "npc")), # Height of line
                                grid::textGrob(footer_text,
                                               x = 0.004, hjust = 0, gp = grid::gpar(fontsize=10)), # Size of text
                                grid::rasterGrob(png::readPNG(logo_image_path), x = 0.954))
-    return(footer)
+return(footer)
 }
 
 #' Arrange alignment and save CAI ggplot chart
