@@ -11,11 +11,24 @@
 #' @param size Specify the size - "Full", "Half", "Long", or "Manual", which references height and width
 #' @param width Width in pixels that you want to save your chart to - defaults to 640
 #' @param height Height in pixels that you want to save your chart to - defaults to 450
-#' @param logo_image_path File path for the logo image you want to use in the right hand side of your chart,
+#' @param logo_path File path for the logo image you want to use in the right hand side of your chart,
 #'  which needs to be a PNG file - defaults to CAI blocks image that sits within the data folder of your package
 #' @return (Invisibly) an updated ggplot object.
 #' @source BBCplot (function) reworked.
 #' @keywords finalise_plot
+#' @examples
+#' data(mtcars)
+#' mtcars$cyl <- as.factor(mtcars$cyl)
+#'
+#' mtcar <- ggplot(data = mtcars) +
+#'   geom_point(aes(x = hp, y = mpg, colour = cyl)) +
+#'   labs(title = "Power versus efficiency", x = "Power (HP)", y = "Efficiency (MPG)")
+#'
+#' mtcar
+#'
+#' CAIfinalise()
+#' CAIfinalise(plot_name = "mtcar")
+#' CAIfinalise(plot_name = "mtcar", filename = "mtcar.png")
 #' @export
 #' @import dplyr ggplot2 ggpubr jpeg png rsvg stringr
 
@@ -27,7 +40,12 @@ CAIfinalise <- function(plot_name = last_plot(),
                           size = "full",
                           width = 640,
                           height = 450,
-                          logo_image_path) {
+                          logo_path = "http://commoditiesanalysis.co.uk/wp-content/uploads/2018/07/cropped-CAI-logo-4.png") {
+
+  options(warn=-1)
+
+  # Needed to cope with plot_name being passed with or without quotes
+    if(class(plot_name) == "character") {plot_name <- get(plot_name)}
 
   # Check that the filename ends in .png, .jpg, or .gif.  If not, add ".png" to the end of the filename
     filename <- ifelse(sum(endsWith(filename, c(".png", ".jpg", ".gif")) == 1), filename, paste0(filename, ".png"))
@@ -50,11 +68,8 @@ CAIfinalise <- function(plot_name = last_plot(),
       size == "manual" ~ width,
       TRUE ~ 650)
 
-# Ensure plot is present, otherwise uses last_plot()
-   plot_name <- ifelse(missing(plot_name), ggplot2::last_plot(), plot_name)
-
 # if logo is specificed, use, otherwise use standard
-    link <- ifelse(missing(logo_image_path), "http://commoditiesanalysis.co.uk/wp-content/uploads/2018/07/cropped-CAI-logo-4.png", logo_image_path)
+    link <- logo_path
 
 # Check if file exists, if not, download it from the website
     if(file.exists(basename(link)) == FALSE) {
@@ -78,13 +93,14 @@ CAIfinalise <- function(plot_name = last_plot(),
       }
 
 logo <- png::readPNG(basename(link))
-footer <- create_footer(source = source, logo_image_path = paste0(getwd(), "/", basename(link)))
+footer <- create_footer(source = source, logo_path = paste0(getwd(), "/", basename(link)))
 
 # Draw left-aligned grid
 plot_left_aligned <- left_align(plot_name, c("subtitle", "title", "caption"))
 plot_grid <- ggpubr::ggarrange(plot_left_aligned, footer,
                                  ncol = 1, nrow = 2,
                                  heights = c(1, 0.065/(height/450))) # Changes the size of logo
+
 
 print(paste("Saving to", save_file))
 save_plot(plot_grid, width, height, save_file)
@@ -109,11 +125,13 @@ left_align <- function(plot_name, pieces){
   }
 
 # Make the footer
-create_footer <- function (source = "CA&I", logo_image_path = "../graphics/cropped-CAI-logo-4.png") {
+create_footer <- function (source = "CA&I", logo_path = "../graphics/cropped-CAI-logo-4.png") {
       footer_text <- paste0("Source: ", source)  # Superscript? text parse(text='70^o*N')
       footer <- grid::grobTree(grid::linesGrob(x = grid::unit(c(0, 1), "npc"), y = grid::unit(1.2, "npc")), # Height of line
                                grid::textGrob(footer_text,
                                               x = 0.004, hjust = 0, gp = grid::gpar(fontsize=10)), # Size of text
-                               grid::rasterGrob(png::readPNG(logo_image_path), x = 0.954))
+                               grid::rasterGrob(png::readPNG(logo_path), x = 0.954))
+options(warn=0)
+
 return(footer)
 }
