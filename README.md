@@ -1,9 +1,9 @@
-# CAIplot collection.
+# CAIplot collection
 
-## A collection of functions for CAI graphics.
+## A collection of functions for CAI graphics
 
-* CAIfinalise completes a GGPLOT, but adding logo and source, and then saving.  Run without arguments, or #' add.
-* CAIstyle - CAI them for GGPLOT
-* LoadInstall - Allows multiple libraries to be installed, if needed, and then loaded
+* *CAIfinalise* - Completes a GGPLOT, by adding source and logo, and then saving. 
+* *CAIstyle* - Apply the CAI style to GGPLOT.
+* *LoadInstall* - Installs multiple libraries, if needed, and then loads them.
 
 The first two taken from BBplot, the third Deepanshu Bhalla at Listendata.com
