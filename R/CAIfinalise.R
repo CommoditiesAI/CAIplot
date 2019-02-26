@@ -8,7 +8,7 @@
 #' @param source The text you want to come after the text 'Source:' in the bottom left hand side of your side
 #' @param filename Exact name of file that you want to save to
 #' @param filepath Exact path to the directory you want to save to
-#' @param size Specify the size - "Full", "Half", "Long", or "Manual", which references height and width
+#' @param size Specify the size - "full", "half", "long", or "manual", which references height and width
 #' @param width Width in pixels that you want to save your chart to - defaults to 640
 #' @param height Height in pixels that you want to save your chart to - defaults to 450
 #' @param logo_path File path for the logo image you want to use in the right hand side of your chart,
@@ -68,7 +68,7 @@ CAIfinalise <- function(plot_name = last_plot(),
       size == "manual" ~ width,
       TRUE ~ 650)
 
-# if logo is specificed, use, otherwise use standard
+# if logo is specificed, use it, otherwise use default
     link <- logo_path
 
 # Check if file exists, if not, download it from the website
@@ -125,12 +125,12 @@ left_align <- function(plot_name, pieces){
   }
 
 # Make the footer
-create_footer <- function (source = "CA&I", logo_path = "../graphics/cropped-CAI-logo-4.png") {
-      footer_text <- paste0("Source: ", source)  # Superscript? text parse(text='70^o*N')
+create_footer <- function (source, logo_path) {
+      footer_text <- paste0("Source: ", source)
       footer <- grid::grobTree(grid::linesGrob(x = grid::unit(c(0, 1), "npc"), y = grid::unit(1.2, "npc")), # Height of line
                                grid::textGrob(footer_text,
                                               x = 0.004, hjust = 0, gp = grid::gpar(fontsize=10)), # Size of text
-                               grid::rasterGrob(png::readPNG(logo_path), x = 0.954))
+                               grid::rasterGrob(png::readPNG(logo_path), x = 0.99, just = "right")) # Position of logo
 options(warn=0)
 
 return(footer)

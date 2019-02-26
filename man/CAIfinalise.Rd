@@ -21,7 +21,7 @@ CAIfinalise(plot_name = last_plot(), source = "CA&I  ©",
 
 \item{filepath}{Exact path to the directory you want to save to}
 
-\item{size}{Specify the size - "Full", "Half", "Long", or "Manual", which references height and width}
+\item{size}{Specify the size - "full", "half", "long", or "manual", which references height and width}
 
 \item{width}{Width in pixels that you want to save your chart to - defaults to 640}
 
