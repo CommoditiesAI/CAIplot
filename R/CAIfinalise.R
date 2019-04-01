@@ -5,7 +5,7 @@
 #' Running this function will save your plot with the correct guidelines for publication for a CAI graphic.
 #' It will left align your title, subtitle and source, add the CAI logo at the bottom right and save it to your specified location.
 #' @param plot_name The variable name of the plot you have created that you want to format and save
-#' @param source The text you want to come after the text 'Source:' in the bottom left hand side of your side
+#' @param source The text you want to come after the text 'Source:' in the bottom left hand side of your side. "none" for no source
 #' @param filename Exact name of file that you want to save to
 #' @param filepath Exact path to the directory you want to save to
 #' @param size Specify the size - "full", "half", "long", or "manual", which references height and width
@@ -92,6 +92,7 @@ CAIfinalise <- function(plot_name = last_plot(),
         png::writePNG(img, link)
       }
 
+
 logo <- png::readPNG(basename(link))
 footer <- create_footer(source = source, logo_path = paste0(getwd(), "/", basename(link)))
 
@@ -126,7 +127,7 @@ left_align <- function(plot_name, pieces){
 
 # Make the footer
 create_footer <- function (source, logo_path) {
-      footer_text <- paste0("Source: ", source)
+      ifelse(footer == str_to_lower("none"), footer_tex <- "", footer_text <- paste0("Source: ", source)) # if source is specified as NULL, then drop
       footer <- grid::grobTree(grid::linesGrob(x = grid::unit(c(0, 1), "npc"), y = grid::unit(1.2, "npc")), # Height of line
                                grid::textGrob(footer_text,
                                               x = 0.004, hjust = 0, gp = grid::gpar(fontsize=10)), # Size of text
