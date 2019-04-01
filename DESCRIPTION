@@ -1,7 +1,7 @@
 Package: CAIplot
 Type: Package
 Title: Set a common theme for CA&I, and finalise a plot when ready
-Version: 0.1.0
+Version: 0.1.1
 Author: person("SC", "Jase", role=c("aut", "cre"), email = "scjase@gmail.com")
 Maintainer: SC Jase <scjase@gmail.com>
 Description: Finalise converts to the correct shape, adds the source and a logo.

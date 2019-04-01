@@ -5,14 +5,16 @@
 #' Running this function will save your plot with the correct guidelines for publication for a CAI graphic.
 #' It will left align your title, subtitle and source, add the CAI logo at the bottom right and save it to your specified location.
 #' @param plot_name The variable name of the plot you have created that you want to format and save
-#' @param source The text you want to come after the text 'Source:' in the bottom left hand side of your side
+#' @param source The text you want to come after the text 'Source:' in the bottom left hand side of your side.
+#'               "None" for no source
 #' @param filename Exact name of file that you want to save to
 #' @param filepath Exact path to the directory you want to save to
 #' @param size Specify the size - "full", "half", "long", or "manual", which references height and width
 #' @param width Width in pixels that you want to save your chart to - defaults to 640
 #' @param height Height in pixels that you want to save your chart to - defaults to 450
 #' @param logo_path File path for the logo image you want to use in the right hand side of your chart,
-#'  which needs to be a PNG file - defaults to CAI blocks image that sits within the data folder of your package
+#'                  which needs to be a PNG file - defaults to CAI blocks image that sits within the data
+#'                  folder of your package
 #' @return (Invisibly) an updated ggplot object.
 #' @source BBCplot (function) reworked.
 #' @keywords finalise_plot
@@ -30,6 +32,7 @@
 #' CAIfinalise(plot_name = "mtcar")
 #' CAIfinalise(plot_name = "mtcar", filename = "mtcar.png")
 #' @export
+#'
 #' @import dplyr ggplot2 ggpubr jpeg png rsvg stringr
 
 
@@ -77,47 +80,48 @@ CAIfinalise <- function(plot_name = last_plot(),
   }
 
 # Convert files to PNG
-    # If file is .svg
+  # If file is .svg
       if(tools::file_ext(link) == "svg") {
         old.link <- link
         link <- paste0(strsplit(basename(link), "\\.")[[1]][1], ".png") # Renames link to the PNG file
         rsvg::rsvg_png(basename(old.link), link)
       }
 
-# If file is .jpg
-      if(tools::file_ext(link) == "jpg") {
-        old.link <- link
-        link <- paste0(strsplit(basename(link), "\\.")[[1]][1], ".png") # Renames link to the PNG file
-        img <- jpeg::readJPEG(basename(old.link))
-        png::writePNG(img, link)
-      }
+  # If file is .jpg
+    if(tools::file_ext(link) == "jpg") {
+      old.link <- link
+      link <- paste0(strsplit(basename(link), "\\.")[[1]][1], ".png") # Renames link to the PNG file
+      img <- jpeg::readJPEG(basename(old.link))
+      png::writePNG(img, link)
+    }
 
-logo <- png::readPNG(basename(link))
-footer <- create_footer(source = source, logo_path = paste0(getwd(), "/", basename(link)))
+
+    logo <- png::readPNG(basename(link))
+    footer <- create_footer(source = source, logo_path = paste0(getwd(), "/", basename(link)))
 
 # Draw left-aligned grid
-plot_left_aligned <- left_align(plot_name, c("subtitle", "title", "caption"))
-plot_grid <- ggpubr::ggarrange(plot_left_aligned, footer,
+    plot_left_aligned <- left_align(plot_name, c("subtitle", "title", "caption"))
+    plot_grid <- ggpubr::ggarrange(plot_left_aligned, footer,
                                  ncol = 1, nrow = 2,
                                  heights = c(1, 0.065/(height/450))) # Changes the size of logo
 
 
-print(paste("Saving to", save_file))
-save_plot(plot_grid, width, height, save_file)
+  print(paste("Saving to", save_file))
+  save_plot(plot_grid, width, height, save_file)
 
 ## Return (invisibly) a copy of the graph. Can be assigned to a variable or ignored
-invisible(plot_grid)
-}
+  invisible(plot_grid)
+  }
 
 # Save the plot as a grid
-save_plot <- function(plot_grid, width, height, save_file) {
+  save_plot <- function(plot_grid, width, height, save_file) {
       grid::grid.draw(plot_grid)
       ggplot2::ggsave(filename = save_file, device = "png",
                   plot=plot_grid, width=(width/72), height=(height/72),  bg="white")
   }
 
 # Left align text
-left_align <- function(plot_name, pieces){
+  left_align <- function(plot_name, pieces){
       grob <- ggplot2::ggplotGrob(plot_name)
       n <- length(pieces)
       grob$layout$l[grob$layout$name %in% pieces] <- 2
@@ -125,13 +129,13 @@ left_align <- function(plot_name, pieces){
   }
 
 # Make the footer
-create_footer <- function (source, logo_path) {
-      footer_text <- paste0("Source: ", source)
+  create_footer <- function (source, logo_path) {
+      ifelse(footer == str_to_lower("none"), footer_tex <- "", footer_text <- paste0("Source: ", source)) # if source is specified as NULL, then drop
       footer <- grid::grobTree(grid::linesGrob(x = grid::unit(c(0, 1), "npc"), y = grid::unit(1.2, "npc")), # Height of line
                                grid::textGrob(footer_text,
                                               x = 0.004, hjust = 0, gp = grid::gpar(fontsize=10)), # Size of text
                                grid::rasterGrob(png::readPNG(logo_path), x = 0.99, just = "right")) # Position of logo
-options(warn=0)
+  options(warn=0)
 
-return(footer)
+  return(footer)
 }

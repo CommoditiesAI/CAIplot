@@ -2,6 +2,7 @@
 #'
 #' Add to the bottom of GGPlots
 #' @export
+#' @import extrafonts
 
 CAIstyle <- function () {
     font <- "Gill Sans MT"
