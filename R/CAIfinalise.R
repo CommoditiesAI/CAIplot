@@ -132,9 +132,7 @@ footer <- create_footer(source = source, logo_path = paste0(getwd(), "/", basena
   }
 
 # Make the footer
-  create_footer <- function (source, logo_path) {
-
-create_footer <- function (source, logo_path) {
+    create_footer <- function (source, logo_path) {
       footer_text <- ifelse(source == "none", "", paste0("Source: ", source)) # if source is specified as NULL, then drop
       footer <- grid::grobTree(grid::linesGrob(x = grid::unit(c(0, 1), "npc"), y = grid::unit(1.2, "npc")), # Height of line
                                grid::textGrob(footer_text,
@@ -143,5 +141,4 @@ create_footer <- function (source, logo_path) {
   options(warn=0)
 
   return(footer)
-}
 }
