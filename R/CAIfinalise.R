@@ -19,7 +19,9 @@
 #' @return (Invisibly) an updated ggplot object.
 #' @source BBCplot (function) reworked.
 #' @keywords finalise_plot
+#' @import ggplot2
 #' @examples
+#' library("ggplot2")
 #' data(mtcars)
 #' mtcars$cyl <- as.factor(mtcars$cyl)
 #'

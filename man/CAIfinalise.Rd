@@ -15,7 +15,8 @@ CAIfinalise(plot_name = last_plot(), source = "CA&I  ©",
 \arguments{
 \item{plot_name}{The variable name of the plot you have created that you want to format and save}
 
-\item{source}{The text you want to come after the text 'Source:' in the bottom left hand side of your side}
+\item{source}{The text you want to come after the text 'Source:' in the bottom left hand side of your side.
+"None" for no source}
 
 \item{filename}{Exact name of file that you want to save to}
 
@@ -28,7 +29,10 @@ CAIfinalise(plot_name = last_plot(), source = "CA&I  ©",
 \item{height}{Height in pixels that you want to save your chart to - defaults to 450}
 
 \item{logo_path}{File path for the logo image you want to use in the right hand side of your chart,
-which needs to be a PNG file - defaults to CAI blocks image that sits within the data folder of your package}
+which needs to be a PNG file - defaults to CAI blocks image that sits within the data
+folder of your package}
+
+\item{source}{The text you want to come after the text 'Source:' in the bottom left hand side of your side. "none" for no source}
 }
 \value{
 (Invisibly) an updated ggplot object.
@@ -41,6 +45,7 @@ Running this function will save your plot with the correct guidelines for public
 It will left align your title, subtitle and source, add the CAI logo at the bottom right and save it to your specified location.
 }
 \examples{
+library("ggplot2")
 data(mtcars)
 mtcars$cyl <- as.factor(mtcars$cyl)
 

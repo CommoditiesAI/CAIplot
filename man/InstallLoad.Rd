@@ -4,10 +4,16 @@
 \alias{InstallLoad}
 \title{Mutliple load of libraries.}
 \usage{
-InstallLoad(packages)
+InstallLoad(packages, supress = TRUE, default = TRUE,
+  verbose = FALSE)
 }
 \arguments{
 \item{packages}{One or more libraries to be loaded.}
+
+\item{supress}{If TRUE (default), package startup messages will be suppressed.}
+
+\item{default}{Loads a default set of libraries,
+I.e. Tidyverse, CAIplot, grid, extrafont, scales}
 }
 \value{
 No return or comments, unless package doesn't exit.
@@ -16,11 +22,11 @@ No return or comments, unless package doesn't exit.
 Install each package in turn, and load the libraries
 }
 \details{
-Function to load (if necessary) and install multiple packages at once
+Function to install packages (if necessary) and load them at once
 Sourced from https://www.listendata.com/2018/12/install-load-multiple-r-packages.html
 Only works with CRAN packages. Dev packages need to be loaded seperately
 }
 \examples{
-packages <- c("extrafont", "scales")
+packages <- c("officer", "forecast")
 InstallLoad(packages)
 }

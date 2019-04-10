@@ -2,7 +2,7 @@
 #'
 #' Add to the bottom of GGPlots
 #' @export
-#' @import extrafonts
+#' @import extrafont
 
 CAIstyle <- function () {
     require(extrafont)
