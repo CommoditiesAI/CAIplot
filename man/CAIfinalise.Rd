@@ -9,8 +9,8 @@ BBCplot (function) reworked.
 \usage{
 CAIfinalise(plot_name = last_plot(), source = "CA&I  ©",
   filename = "unnamed_plot.png", filepath = getwd(), size = "full",
-  width = 640, height = 450,
-  logo_path = "http://commoditiesanalysis.co.uk/wp-content/uploads/2018/07/cropped-CAI-logo-4.png")
+  width = 640, height = 450, unit = "px",
+  logo_path = "https://bit.ly/2Z5JeU3")
 }
 \arguments{
 \item{plot_name}{The variable name of the plot you have created that you want to format and save}
@@ -28,11 +28,11 @@ CAIfinalise(plot_name = last_plot(), source = "CA&I  ©",
 
 \item{height}{Height in pixels that you want to save your chart to - defaults to 450}
 
+\item{unit}{Default is pixels (px), but accepts cm}
+
 \item{logo_path}{File path for the logo image you want to use in the right hand side of your chart,
 which needs to be a PNG file - defaults to CAI blocks image that sits within the data
 folder of your package}
-
-\item{source}{The text you want to come after the text 'Source:' in the bottom left hand side of your side. "none" for no source}
 }
 \value{
 (Invisibly) an updated ggplot object.
@@ -43,20 +43,5 @@ Function for finalising a graphic - resize, add logo and source, then save.
 \details{
 Running this function will save your plot with the correct guidelines for publication for a CAI graphic.
 It will left align your title, subtitle and source, add the CAI logo at the bottom right and save it to your specified location.
-}
-\examples{
-library("ggplot2")
-data(mtcars)
-mtcars$cyl <- as.factor(mtcars$cyl)
-
-mtcar <- ggplot(data = mtcars) +
-  geom_point(aes(x = hp, y = mpg, colour = cyl)) +
-  labs(title = "Power versus efficiency", x = "Power (HP)", y = "Efficiency (MPG)")
-
-mtcar
-
-CAIfinalise()
-CAIfinalise(plot_name = "mtcar")
-CAIfinalise(plot_name = "mtcar", filename = "mtcar.png")
 }
 \keyword{finalise_plot}

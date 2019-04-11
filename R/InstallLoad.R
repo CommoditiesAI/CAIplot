@@ -9,18 +9,17 @@
 #' @param packages One or more libraries to be loaded.
 #' @param supress If TRUE (default), package startup messages will be suppressed.
 #' @param default Loads a default set of libraries,
-#'                I.e. Tidyverse, CAIplot, grid, extrafont, scales
+#'                e.e. Tidyverse, CAIplot, grid, extrafont, scales
+#' @param verbose Provide verbose messages as packages load
 #' @return No return or comments, unless package doesn't exit.
-#' @examples
-#' packages <- c("officer", "forecast")
-#' InstallLoad(packages)
 #' @export
 #' @import utils
 
 InstallLoad <- function(packages, supress = TRUE, default = TRUE, verbose = FALSE) {
-  if(default == TRUE) (packages <- append(packages, c("tidyverse", "CAIplot", "grid", "extrafont", "scales"))) # Add defaults
+  # Add defaults
+  if(default == TRUE) (packages <- append(packages, c("tidyverse", "CAIplot", "grid", "extrafont", "scales")))
 
-# Do any of the packages need installing
+# Do any of the packages need installing?
   k <- packages[!(packages %in% installed.packages()[,"Package"])]
   if(length(k)) {
     ifelse(supress == TRUE,

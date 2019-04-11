@@ -5,7 +5,6 @@
 #' @import extrafont
 
 CAIstyle <- function () {
-    require(extrafont)
     font <- "Gill Sans MT"
 
     ggplot2::theme(plot.title = ggplot2::element_text(family = font,

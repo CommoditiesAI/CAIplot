@@ -7,7 +7,6 @@
 #' @param plot_name The variable name of the plot you have created that you want to format and save
 #' @param source The text you want to come after the text 'Source:' in the bottom left hand side of your side.
 #'               "None" for no source
-#' @param source The text you want to come after the text 'Source:' in the bottom left hand side of your side. "none" for no source
 #' @param filename Exact name of file that you want to save to
 #' @param filepath Exact path to the directory you want to save to
 #' @param size Specify the size - "full", "half", "long", or "manual", which references height and width
@@ -16,24 +15,10 @@
 #' @param logo_path File path for the logo image you want to use in the right hand side of your chart,
 #'                  which needs to be a PNG file - defaults to CAI blocks image that sits within the data
 #'                  folder of your package
+#' @param unit Default is pixels (px), but accepts cm
 #' @return (Invisibly) an updated ggplot object.
 #' @source BBCplot (function) reworked.
 #' @keywords finalise_plot
-#' @import ggplot2
-#' @examples
-#' library("ggplot2")
-#' data(mtcars)
-#' mtcars$cyl <- as.factor(mtcars$cyl)
-#'
-#' mtcar <- ggplot(data = mtcars) +
-#'   geom_point(aes(x = hp, y = mpg, colour = cyl)) +
-#'   labs(title = "Power versus efficiency", x = "Power (HP)", y = "Efficiency (MPG)")
-#'
-#' mtcar
-#'
-#' CAIfinalise()
-#' CAIfinalise(plot_name = "mtcar")
-#' CAIfinalise(plot_name = "mtcar", filename = "mtcar.png")
 #' @export
 #'
 #' @import dplyr ggplot2 ggpubr jpeg png rsvg stringr
@@ -46,8 +31,9 @@ CAIfinalise <- function(plot_name = last_plot(),
                           size = "full",
                           width = 640,
                           height = 450,
-                          logo_path = "http://commoditiesanalysis.co.uk/wp-content/uploads/2018/07/cropped-CAI-logo-4.png") {
-
+                          unit = "px",
+                          logo_path = "https://bit.ly/2Z5JeU3") {
+# http://commoditiesanalysis.co.uk/wp-content/uploads/2018/07/cropped-CAI-logo-4.png
   options(warn=-1)
 
   # Needed to cope with plot_name being passed with or without quotes
@@ -57,6 +43,13 @@ CAIfinalise <- function(plot_name = last_plot(),
     filename <- ifelse(sum(endsWith(filename, c(".png", ".jpg", ".gif")) == 1), filename, paste0(filename, ".png"))
     filename <- ifelse(filename == "unnamed_plot.png", paste0("UnnamedPlot_", format(Sys.time(), "%b%d_%H%M"), ".png"), filename)   # Time stamp filename, if not given
     save_file <- paste0(filepath, "/", filename)   # Create the file name for saving
+
+  # if passed measures are in cm, convert to pixels
+    if(unit == str_to_lower("cm")) {
+      width <- width*37.795276
+      height <- height*37.795276
+    }
+
 
   # Case of size, to give width and height
     size <- stringr::str_to_lower(size)
@@ -134,13 +127,14 @@ footer <- create_footer(source = source, logo_path = paste0(getwd(), "/", basena
   }
 
 # Make the footer
-    create_footer <- function (source, logo_path) {
+    create_footer <- function(source, logo_path) {
       footer_text <- ifelse(source == "none", "", paste0("Source: ", source)) # if source is specified as NULL, then drop
       footer <- grid::grobTree(grid::linesGrob(x = grid::unit(c(0, 1), "npc"), y = grid::unit(1.2, "npc")), # Height of line
                                grid::textGrob(footer_text,
                                               x = 0.004, hjust = 0, gp = grid::gpar(fontsize=10)), # Size of text
                                grid::rasterGrob(png::readPNG(logo_path), x = 0.99, just = "right")) # Position of logo
-  options(warn=0)
+    return(footer)
 
-  return(footer)
+options(warn=0)
+
 }
