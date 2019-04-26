@@ -4,7 +4,7 @@
 \alias{InstallLoad}
 \title{Mutliple load of libraries.}
 \usage{
-InstallLoad(packages, supress = TRUE, default = TRUE,
+InstallLoad(packages = "", supress = TRUE, default = TRUE,
   verbose = FALSE)
 }
 \arguments{
