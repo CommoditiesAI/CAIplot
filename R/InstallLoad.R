@@ -15,13 +15,16 @@
 #' @export
 #' @import utils
 
-InstallLoad <- function(packages, supress = TRUE, default = TRUE, verbose = FALSE) {
+InstallLoad <- function(packages= "", supress = TRUE, default = TRUE, verbose = FALSE) {
   # Add defaults
-  if(default == TRUE) (packages <- append(packages, c("tidyverse", "CAIplot", "grid", "extrafont", "scales")))
+  if(default == TRUE) {
+    packages <- append(packages, c("tidyverse", "CAIplot", "grid", "extrafont", "scales"))
+  }
 
 # Do any of the packages need installing?
   k <- packages[!(packages %in% installed.packages()[,"Package"])]
-  if(length(k)) {
+
+  if(length(k) > 0) {
     ifelse(supress == TRUE,
            suppressPackageStartupMessages(install.packages(k, repos="https://cran.rstudio.com/")),
            install.packages(k, repos="https://cran.rstudio.com/"))
@@ -29,6 +32,6 @@ InstallLoad <- function(packages, supress = TRUE, default = TRUE, verbose = FALS
 
   # Load the packages
   for(package_name in packages) {
-    library(package_name, character.only=TRUE, quietly = TRUE)}
+    library(package_name, character.only=TRUE, quietly = verbose)}
 
   }
