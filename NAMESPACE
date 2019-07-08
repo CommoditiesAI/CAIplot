@@ -2,6 +2,7 @@
 
 export(CAIfinalise)
 export(CAIstyle)
+export(CleanNames)
 export(InstallLoad)
 import(dplyr)
 import(extrafont)
