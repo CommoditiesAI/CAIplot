@@ -4,18 +4,15 @@
 \alias{InstallLoad}
 \title{Mutliple load of libraries.}
 \usage{
-InstallLoad(packages = NULL, supress = TRUE, default = TRUE,
-  verbose = FALSE)
+InstallLoad(packages = NULL, supress = TRUE, default = TRUE)
 }
 \arguments{
 \item{packages}{One or more libraries to be loaded.}
 
 \item{supress}{If TRUE (default), package startup messages will be suppressed.}
 
-\item{default}{Loads a default set of libraries,
-e.e. Tidyverse, CAIplot, grid, extrafont, scales}
-
-\item{verbose}{Provide verbose messages as packages load}
+\item{default}{If TRUE (default) loads a default set of libraries,
+i.e. Tidyverse, CAIplot, grid, extrafont, scales}
 }
 \value{
 No return or comments, unless package doesn't exit.
