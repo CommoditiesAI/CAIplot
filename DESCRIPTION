@@ -1,7 +1,7 @@
 Package: CAIplot
 Type: Package
 Title: Set of commonly used functions
-Version: 0.3.0
+Version: 0.3.1
 Author: person("SC", "Jase", role=c("aut", "cre"), email = "scjase@gmail.com")
 Maintainer: SC Jase <scjase@gmail.com>
 Description: CAIfinalise converts to the correct shape, adds the source and a logo.
