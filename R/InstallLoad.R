@@ -8,14 +8,13 @@
 #'
 #' @param packages One or more libraries to be loaded.
 #' @param supress If TRUE (default), package startup messages will be suppressed.
-#' @param default Loads a default set of libraries,
-#'                e.e. Tidyverse, CAIplot, grid, extrafont, scales
-#' @param verbose Provide verbose messages as packages load
+#' @param default If TRUE (default) loads a default set of libraries,
+#'                i.e. Tidyverse, CAIplot, grid, extrafont, scales
 #' @return No return or comments, unless package doesn't exit.
 #' @export
 #' @import utils
 
-InstallLoad <- function(packages = NULL, supress = TRUE, default = TRUE, verbose = FALSE) {
+InstallLoad <- function(packages = NULL, supress = TRUE, default = TRUE) {
 
 # Add defaults
   if(default != FALSE) {
