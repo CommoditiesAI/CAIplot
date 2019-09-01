@@ -31,7 +31,7 @@ InstallLoad <- function(packages = NULL, supress = TRUE, default = TRUE) {
           install.packages(package, repos = c("http://cran.ma.imperial.ac.uk/", "https://cloud.r-project.org"),
                          dependencies = NA, type = getOption("pkgType"))
           ifelse(supress == TRUE,
-                 try(do.call(suppressPackageStartupMessages(library, list(package)))),
+                 try(suppressPackageStartupMessages(do.call(library, list(package)))),
                  try(do.call(library, list(package))))
          }
     }
