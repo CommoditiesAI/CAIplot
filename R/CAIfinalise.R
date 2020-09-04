@@ -18,7 +18,6 @@
 #' @param unit Default is pixels (px), but accepts cm
 #' @return (Invisibly) an updated ggplot object.
 #' @source BBCplot (function) reworked.
-#' @keywords finalise_plot
 #' @export
 #'
 #' @import dplyr ggplot2 ggpubr jpeg png rsvg stringr
